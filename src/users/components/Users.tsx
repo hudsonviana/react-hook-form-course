@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Stack, TextField } from '@mui/material'
 import { useFormContext } from 'react-hook-form'
 import type { Schema } from '../types/schema'
@@ -7,7 +8,16 @@ export default function Users() {
   const {
     register,
     formState: { errors },
+    watch,
   } = useFormContext<Schema>()
+
+  useEffect(() => {
+    const sub = watch((value) => {
+      console.log(value)
+    })
+
+    return () => sub.unsubscribe()
+  }, [watch])
 
   return (
     <Stack sx={{ gap: 2 }}>
