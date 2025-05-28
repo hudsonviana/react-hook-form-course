@@ -23,10 +23,17 @@ export default function Users() {
         error={!!errors.email}
         helperText={errors.email?.message}
       />
-      <RHFAutocomplete<Schema> name="states" />
+      <RHFAutocomplete<Schema>
+        name="states"
+        label="States"
+        options={[
+          { id: '1', label: 'California' },
+          { id: '2', label: 'Texas' },
+        ]}
+      />
     </Stack>
   )
 }
 
-// PAREI COM 39:52
+// PAREI COM 1:08:20
 // https://www.youtube.com/watch?v=JyeWoqWsQFo&t=454s
