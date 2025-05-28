@@ -1,16 +1,13 @@
-import { useForm } from 'react-hook-form'
 import { Stack, TextField } from '@mui/material'
-import { schema, type Schema } from '../types/schema'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useFormContext } from 'react-hook-form'
+import type { Schema } from '../types/schema'
+import RHFAutocomplete from '../../components/RHFAutocomplete'
 
 export default function Users() {
   const {
     register,
     formState: { errors },
-  } = useForm<Schema>({
-    mode: 'all',
-    resolver: zodResolver(schema),
-  })
+  } = useFormContext<Schema>()
 
   return (
     <Stack sx={{ gap: 2 }}>
@@ -26,6 +23,7 @@ export default function Users() {
         error={!!errors.email}
         helperText={errors.email?.message}
       />
+      <RHFAutocomplete<Schema> name="states" />
     </Stack>
   )
 }
