@@ -52,7 +52,7 @@ export function useUsers() {
         res.data.map(
           (user) =>
             ({
-              id: user.id,
+              id: user.id.toString(),
               label: user.name,
             } satisfies Option)
         )
@@ -70,7 +70,7 @@ export function useUser(id: string) {
 
       return {
         variant: 'edit',
-        id: data.id,
+        id: data.id.toString(),
         name: data.name,
         email: data.email,
         formerEmploymentPeriod: [

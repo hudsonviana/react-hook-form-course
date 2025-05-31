@@ -4,24 +4,24 @@ type Create = {
 
 type Edit = {
   variant: 'edit'
-  id: string
+  id: number
 }
 
-export type Common = {
+export type ApiCommon = {
   email: string
   formerEmploymentPeriod: [string, string]
   name: string
   gender: string
-  languagesSpoken: [string, string]
+  languagesSpoken: string[]
   registrationDateAndTime: string
   salaryRange: [number, number]
-  skills: [string, string]
-  states: [string, string]
+  skills: string[]
+  states: string[]
   isTeacher: boolean
   students: {
     name: string
   }[]
 }
 
-export type ApiCreateEdit = Common & (Create | Edit)
-export type ApiGet = Edit & Common
+export type ApiCreateEdit = ApiCommon & (Create | Edit)
+export type ApiGet = Edit & ApiCommon

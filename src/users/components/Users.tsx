@@ -10,8 +10,13 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
-import { defaultValues, type Schema } from '../types/schema'
+import {
+  useFieldArray,
+  useFormContext,
+  useWatch,
+  type SubmitHandler,
+} from 'react-hook-form'
+import { defaultValues, schema, type Schema } from '../types/schema'
 import RHFAutocomplete from '../../components/RHFAutocomplete'
 import {
   useGenders,
@@ -29,6 +34,7 @@ import RHFDateRangePicker from '../../components/RHFDateRangePicker'
 import RHFSlider from '../../components/RHFSlider'
 import RHFSwitch from '../../components/RHFSwitch'
 import RHFTextField from '../../components/RHFTextField'
+import { useCreateUser, useEditUser } from '../services/mutations'
 
 export default function Users() {
   const stateQuery = useStates()
@@ -37,10 +43,12 @@ export default function Users() {
   const skillsQuery = useSkills()
   const usersQuery = useUsers()
 
-  const { watch, control, unregister, reset, setValue } =
+  const { watch, control, unregister, reset, setValue, getValues, handleSubmit } =
     useFormContext<Schema>()
 
   const id = useWatch({ control, name: 'id' })
+  const variant = useWatch({ control, name: 'variant' })
+
   const userQuery = useUser(id)
 
   useEffect(() => {
@@ -79,8 +87,21 @@ export default function Users() {
     reset(defaultValues)
   }
 
+  const createUserMutation = useCreateUser()
+  const editUserMutation = useEditUser()
+
+  const onSubmit: SubmitHandler<Schema> = (data) => {
+    if (variant === 'create') {
+      createUserMutation.mutate(data)
+    }
+
+    if (variant === 'edit') {
+      editUserMutation.mutate(data)
+    }
+  }
+
   return (
-    <Container maxWidth="sm" component="form">
+    <Container maxWidth="sm" component="form" onSubmit={handleSubmit(onSubmit)}>
       <Stack sx={{ flexDirection: 'row', gap: 2 }}>
         <List subheader={<ListSubheader>Users</ListSubheader>}>
           {usersQuery.data?.map((user) => (
@@ -150,7 +171,10 @@ export default function Users() {
             </Fragment>
           ))}
           <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Button type="submit">New User</Button>
+            <Button type="submit" variant="contained">
+              {variant === 'create' ? 'New User' : 'Edit User'}
+            </Button>
+            <button onClick={()=> schema.parse(getValues())}>Parse</button>
             <Button onClick={handleReset}>Reset</Button>
           </Stack>
         </Stack>
