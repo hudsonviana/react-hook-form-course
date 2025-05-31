@@ -16,6 +16,7 @@ import RHFDateAndTimePicker from '../../components/RHFDateAndTimePicker'
 import RHFDateRangePicker from '../../components/RHFDateRangePicker'
 import RHFSlider from '../../components/RHFSlider'
 import RHFSwitch from '../../components/RHFSwitch'
+import RHFTextField from '../../components/RHFTextField'
 
 export default function Users() {
   const stateQuery = useStates()
@@ -39,19 +40,9 @@ export default function Users() {
 
   return (
     <Stack sx={{ gap: 2 }}>
-      <TextField
-        {...register('name')}
-        label="Nome"
-        error={!!errors.name}
-        helperText={errors.name?.message}
-      />
-
-      <TextField
-        {...register('email')}
-        label="Email"
-        error={!!errors.email}
-        helperText={errors.email?.message}
-      />
+      <RHFTextField<Schema> name="name" label="Name" />
+        
+      <RHFTextField<Schema> name="email" label="Email" />
 
       <RHFAutocomplete<Schema>
         name="states"
