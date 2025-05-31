@@ -1,13 +1,25 @@
 import { Fragment, useEffect } from 'react'
-import { Button, Stack, Typography } from '@mui/material'
+import {
+  Button,
+  Container,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  ListSubheader,
+  Stack,
+  Typography,
+} from '@mui/material'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
-import type { Schema } from '../types/schema'
+import { defaultValues, type Schema } from '../types/schema'
 import RHFAutocomplete from '../../components/RHFAutocomplete'
 import {
   useGenders,
   useLanguages,
   useSkills,
   useStates,
+  useUser,
+  useUsers,
 } from '../services/queries'
 import RHFToggleButtonGroup from '../../components/RHFToggleButtonGroup'
 import RHFRadioGroup from '../../components/RHFRadioGroup'
@@ -23,14 +35,13 @@ export default function Users() {
   const languagesQuery = useLanguages()
   const genderQuery = useGenders()
   const skillsQuery = useSkills()
+  const usersQuery = useUsers()
 
-  const {
-    register,
-    formState: { errors },
-    watch,
-    control,
-    unregister,
-  } = useFormContext<Schema>()
+  const { watch, control, unregister, reset, setValue } =
+    useFormContext<Schema>()
+
+  const id = useWatch({ control, name: 'id' })
+  const userQuery = useUser(id)
 
   useEffect(() => {
     const sub = watch((value) => {
@@ -47,6 +58,10 @@ export default function Users() {
     name: 'students',
   })
 
+  const handleUserClick = (id: string) => {
+    setValue('id', id)
+  }
+
   useEffect(() => {
     if (!isTeacher) {
       replace([])
@@ -54,64 +69,95 @@ export default function Users() {
     }
   }, [isTeacher, replace, unregister])
 
+  useEffect(() => {
+    if (userQuery.data) {
+      reset(userQuery.data)
+    }
+  }, [reset, userQuery.data])
+
+  const handleReset = () => {
+    reset(defaultValues)
+  }
+
   return (
-    <Stack sx={{ gap: 2 }}>
-      <RHFTextField<Schema> name="name" label="Name" />
+    <Container maxWidth="sm" component="form">
+      <Stack sx={{ flexDirection: 'row', gap: 2 }}>
+        <List subheader={<ListSubheader>Users</ListSubheader>}>
+          {usersQuery.data?.map((user) => (
+            <ListItem disablePadding key={user.id}>
+              <ListItemButton
+                onClick={() => handleUserClick(user.id)}
+                selected={id === user.id}
+              >
+                <ListItemText primary={user.label} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
 
-      <RHFTextField<Schema> name="email" label="Email" />
+        <Stack sx={{ gap: 2 }}>
+          <RHFTextField<Schema> name="name" label="Name" />
 
-      <RHFAutocomplete<Schema>
-        name="states"
-        label="States"
-        options={stateQuery.data}
-      />
+          <RHFTextField<Schema> name="email" label="Email" />
 
-      <RHFToggleButtonGroup<Schema>
-        name="languagesSpoken"
-        options={languagesQuery.data}
-      />
+          <RHFAutocomplete<Schema>
+            name="states"
+            label="States"
+            options={stateQuery.data}
+          />
 
-      <RHFRadioGroup<Schema>
-        name="gender"
-        options={genderQuery.data}
-        label="Gender"
-      />
+          <RHFToggleButtonGroup<Schema>
+            name="languagesSpoken"
+            options={languagesQuery.data}
+          />
 
-      <RHFCheckbox<Schema>
-        name="skills"
-        options={skillsQuery.data}
-        label="skills"
-      />
+          <RHFRadioGroup<Schema>
+            name="gender"
+            options={genderQuery.data}
+            label="Gender"
+          />
 
-      <RHFDateAndTimePicker<Schema>
-        name="registrationDateAndTime"
-        label="Registration Date And Time"
-      />
+          <RHFCheckbox<Schema>
+            name="skills"
+            options={skillsQuery.data}
+            label="skills"
+          />
 
-      <Typography>Former Employmnent Period:</Typography>
-      <RHFDateRangePicker<Schema> name="formerEmploymentPeriod" />
+          <RHFDateAndTimePicker<Schema>
+            name="registrationDateAndTime"
+            label="Registration Date And Time"
+          />
 
-      <RHFSlider<Schema> name="salaryRange" label="Salary Range" />
+          <Typography>Former Employmnent Period:</Typography>
+          <RHFDateRangePicker<Schema> name="formerEmploymentPeriod" />
 
-      <RHFSwitch<Schema> name="isTeacher" label="Are you a teacher?" />
+          <RHFSlider<Schema> name="salaryRange" label="Salary Range" />
 
-      {isTeacher && (
-        <Button onClick={() => append({ name: '' })} type="button">
-          Add new Student
-        </Button>
-      )}
+          <RHFSwitch<Schema> name="isTeacher" label="Are you a teacher?" />
 
-      {fields.map((field, index) => (
-        <Fragment key={field.id}>
-          <RHFTextField name={`students.${index}.name`} label="Name" />
-          <Button color="error" onClick={() => remove(index)} type="button">
-            Remove
-          </Button>
-        </Fragment>
-      ))}
-    </Stack>
+          {isTeacher && (
+            <Button onClick={() => append({ name: '' })} type="button">
+              Add new Student
+            </Button>
+          )}
+
+          {fields.map((field, index) => (
+            <Fragment key={field.id}>
+              <RHFTextField name={`students.${index}.name`} label="Name" />
+              <Button color="error" onClick={() => remove(index)} type="button">
+                Remove
+              </Button>
+            </Fragment>
+          ))}
+          <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Button type="submit">New User</Button>
+            <Button onClick={handleReset}>Reset</Button>
+          </Stack>
+        </Stack>
+      </Stack>
+    </Container>
   )
 }
 
 // https://www.youtube.com/watch?v=JyeWoqWsQFo
-// Parei com 1:45:30
+// Parei com 2:28:00
