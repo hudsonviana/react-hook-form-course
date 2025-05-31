@@ -12,6 +12,7 @@ import {
 import RHFToggleButtonGroup from '../../components/RHFToggleButtonGroup'
 import RHFRadioGroup from '../../components/RHFRadioGroup'
 import RHFCheckbox from '../../components/RHFCheckbox'
+import RHFDateAndTimePicker from '../../components/RHFDateAndTimePicker'
 
 export default function Users() {
   const stateQuery = useStates()
@@ -71,9 +72,11 @@ export default function Users() {
         options={skillsQuery.data}
         label="skills"
       />
+
+      <RHFDateAndTimePicker<Schema>
+        name="registrationDateAndTime"
+        label="Registration Date And Time"
+      />
     </Stack>
   )
 }
-
-// PAREI COM 1:08:20
-// https://www.youtube.com/watch?v=JyeWoqWsQFo&t=454s
