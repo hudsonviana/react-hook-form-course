@@ -14,6 +14,7 @@ import RHFRadioGroup from '../../components/RHFRadioGroup'
 import RHFCheckbox from '../../components/RHFCheckbox'
 import RHFDateAndTimePicker from '../../components/RHFDateAndTimePicker'
 import RHFDateRangePicker from '../../components/RHFDateRangePicker'
+import RHFSlider from '../../components/RHFSlider'
 
 export default function Users() {
   const stateQuery = useStates()
@@ -81,6 +82,11 @@ export default function Users() {
 
       <Typography>Former Employmnent Period:</Typography>
       <RHFDateRangePicker<Schema> name="formerEmploymentPeriod" />
+
+      <RHFSlider<Schema> name="salaryRange" label="Salary Range" />
     </Stack>
   )
 }
+
+// https://www.youtube.com/watch?v=JyeWoqWsQFo
+// Parei com 1:45:30
