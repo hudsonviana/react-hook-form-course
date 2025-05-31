@@ -4,17 +4,17 @@ import {
   type FieldValues,
   type Path,
 } from 'react-hook-form'
-import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { DateRangePicker } from '@mui/x-date-pickers-pro'
+
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
 type Props<T extends FieldValues> = {
   name: Path<T>
-  label: string
 }
 
-export default function RHFDateAndTimePicker<T extends FieldValues>({
+export default function RHFDateRangePicker<T extends FieldValues>({
   name,
-  label,
 }: Props<T>) {
   const { control } = useFormContext<T>()
 
@@ -22,9 +22,12 @@ export default function RHFDateAndTimePicker<T extends FieldValues>({
     <Controller
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field: { value, ...restField } }) => (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DateTimePicker label={label} {...field} />
+          <DateRangePicker
+            {...restField}
+            value={Array.isArray(value) ? value : [null, null]}
+          />
         </LocalizationProvider>
       )}
     />

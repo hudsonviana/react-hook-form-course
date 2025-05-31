@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Stack, TextField } from '@mui/material'
+import { Stack, TextField, Typography } from '@mui/material'
 import { useFormContext } from 'react-hook-form'
 import type { Schema } from '../types/schema'
 import RHFAutocomplete from '../../components/RHFAutocomplete'
@@ -13,6 +13,7 @@ import RHFToggleButtonGroup from '../../components/RHFToggleButtonGroup'
 import RHFRadioGroup from '../../components/RHFRadioGroup'
 import RHFCheckbox from '../../components/RHFCheckbox'
 import RHFDateAndTimePicker from '../../components/RHFDateAndTimePicker'
+import RHFDateRangePicker from '../../components/RHFDateRangePicker'
 
 export default function Users() {
   const stateQuery = useStates()
@@ -77,6 +78,9 @@ export default function Users() {
         name="registrationDateAndTime"
         label="Registration Date And Time"
       />
+
+      <Typography>Former Employmnent Period:</Typography>
+      <RHFDateRangePicker<Schema> name="formerEmploymentPeriod" />
     </Stack>
   )
 }
